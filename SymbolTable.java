@@ -3,7 +3,7 @@ import java.util.HashMap;
 public class SymbolTable {
 
     // Possible kinds of symbols in the table
-    public static  enum Kind {
+    public static enum Kind {
         STATIC, THIS, ARG, LOCAL, NONE
     }
     private static int staticIndex;
