@@ -22,9 +22,16 @@ public class VMWriter {
 
    
     public void writePush(Segment segment, int index)throws IOException {
-        writer.write("push");
-        writer.write(segment.toString().toLowerCase());
-        writer.write(index);
+        if (index == -1 ){
+            writer.write("push");
+            writer.write(segment.toString().toLowerCase());
+        }
+        else{
+            writer.write("push");
+            writer.write(segment.toString().toLowerCase());
+            writer.write(index);
+        }
+        
     }
 
   

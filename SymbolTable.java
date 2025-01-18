@@ -42,41 +42,24 @@ public class SymbolTable {
             Identifier newMember = new Identifier(name, type, Kind.STATIC.toString(), staticIndex);
             classLevelMap.put(name, newMember);
             staticIndex ++ ;
-            System.out.println("staticcccccc");
-            System.out.println(newMember.getName());
-            System.out.println(newMember.getType());
-            System.out.println(newMember.getKind());
-            System.out.println(newMember.getRunningIndex());
+            
         }
         else if (kind.equals(Kind.THIS) ){
             Identifier newMember = new Identifier(name, type, "this", fieldIndex);
             classLevelMap.put(name, newMember);
             fieldIndex ++; 
-            System.out.println("thissssss");
-            System.out.println(newMember.getName());
-            System.out.println(newMember.getType());
-            System.out.println(newMember.getKind());
-            System.out.println(newMember.getRunningIndex());
         }
+
         else if (kind.equals(Kind.ARG) ){
             Identifier newMember = new Identifier(name, type, Kind.ARG.toString(), argIndex);
             methodLevelMap.put(name, newMember);
             argIndex ++; 
-            System.out.println("arggggg");
-            System.out.println(newMember.getName());
-            System.out.println(newMember.getType());
-            System.out.println(newMember.getKind());
-            System.out.println(newMember.getRunningIndex());
         }
+
         else if (kind.equals(Kind.LOCAL)){
             Identifier newMember = new Identifier(name, type, Kind.LOCAL.toString(), varIndex);
             methodLevelMap.put(name, newMember);
             varIndex ++; 
-            System.out.println("locallllll");
-            System.out.println(newMember.getName());
-            System.out.println(newMember.getType());
-            System.out.println(newMember.getKind());
-            System.out.println(newMember.getRunningIndex());
         }
     }
 
