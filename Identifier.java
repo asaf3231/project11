@@ -1,11 +1,10 @@
 
 public class Identifier {
     
-    
     private static String name; 
     private static String type; 
     private static String kind; 
-    private static int runningIndex;
+    public  int runningIndex;
     
     
     public Identifier(String name , String type , String kind , int runningIndex){
@@ -25,8 +24,11 @@ public class Identifier {
     public static String getKind() {
         return kind;
     }
-    public static int getRunningIndex() {
-        return runningIndex;
+    @Override
+    public String toString() {
+        return "Identifier{name='" + name + "', type='" + type + "', kind='" + kind + "', runningIndex=" + runningIndex + "}";
     }
+
+    
 
 }

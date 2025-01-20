@@ -1,15 +1,16 @@
 import java.util.HashMap;
+import java.util.Map;
 
 public class SymbolTable {
 
     // Possible kinds of symbols in the table
     public static enum Kind {
-        STATIC, THIS, ARG, LOCAL, NONE
+        STATIC, THIS, ARGUMENT, LOCAL, NONE
     }
     private static int staticIndex;
-    private static int fieldIndex;
+    public static int fieldIndex;
     private static int argIndex;
-    private static int varIndex;
+    public static int varIndex;
 
     public static HashMap <String,Identifier> classLevelMap ;
     public static HashMap <String,Identifier> methodLevelMap ;
@@ -26,43 +27,40 @@ public class SymbolTable {
 
    
     public void reset() {
-        
         methodLevelMap.clear();
-        
-        staticIndex = 0;
-        fieldIndex  = 0;
         argIndex    = 0;
         varIndex    = 0;
     }
 
    
     public void define(String name, String type, Kind kind) {
-        
-        if (kind.equals(Kind.STATIC)){
-            Identifier newMember = new Identifier(name, type, Kind.STATIC.toString(), staticIndex);
-            classLevelMap.put(name, newMember);
-            staticIndex ++ ;
-            
-        }
-        else if (kind.equals(Kind.THIS) ){
-            Identifier newMember = new Identifier(name, type, "this", fieldIndex);
-            classLevelMap.put(name, newMember);
-            fieldIndex ++; 
-        }
 
-        else if (kind.equals(Kind.ARG) ){
-            Identifier newMember = new Identifier(name, type, Kind.ARG.toString(), argIndex);
-            methodLevelMap.put(name, newMember);
-            argIndex ++; 
-        }
-
-        else if (kind.equals(Kind.LOCAL)){
-            Identifier newMember = new Identifier(name, type, Kind.LOCAL.toString(), varIndex);
-            methodLevelMap.put(name, newMember);
-            varIndex ++; 
+        if (kind.equals(Kind.STATIC)) {
+            if (!classLevelMap.containsKey(name)) { // Prevent duplicate definitions
+                Identifier newMember = new Identifier(name, type, Kind.STATIC.toString(), staticIndex);
+                classLevelMap.put(name, newMember);
+                staticIndex++;
+            }
+        } else if (kind.equals(Kind.THIS)) {
+            if (!classLevelMap.containsKey(name)) {
+                Identifier newMember = new Identifier(name, type, "this", fieldIndex);
+                classLevelMap.put(name, newMember);
+                fieldIndex++;
+            }
+        } else if (kind.equals(Kind.ARGUMENT)) {
+            if (!methodLevelMap.containsKey(name)) {
+                Identifier newMember = new Identifier(name, type, Kind.ARGUMENT.toString(), argIndex);
+                methodLevelMap.put(name, newMember);
+                argIndex++;
+            }
+        } else if (kind.equals(Kind.LOCAL)) {
+            if (!methodLevelMap.containsKey(name)) {
+                Identifier newMember = new Identifier(name, type, Kind.LOCAL.toString(), varIndex);
+                methodLevelMap.put(name, newMember);
+                varIndex++;
+            }
         }
     }
-
    
     public int varCount(Kind kind) {
 
@@ -72,7 +70,7 @@ public class SymbolTable {
         if (kind.equals(Kind.THIS)){
             return fieldIndex;
         }
-        if (kind.equals(Kind.ARG)){
+        if (kind.equals(Kind.ARGUMENT)){
             return argIndex;
         }
         if (kind.equals(Kind.LOCAL)){
@@ -107,12 +105,12 @@ public class SymbolTable {
         return Kind.NONE.toString();
     }
 
-    public int indexOf(String name) {
+    public static int indexOf(String name) {
         if ( methodLevelMap.containsKey(name) ) {
-            return methodLevelMap.get(name).getRunningIndex();    
+            return methodLevelMap.get(name).runningIndex;    
         }
         else if ( classLevelMap.containsKey(name) ) {
-            return classLevelMap.get(name).getRunningIndex();    
+            return classLevelMap.get(name).runningIndex;    
         } 
         return -1;
     }
@@ -124,7 +122,7 @@ public class SymbolTable {
             System.out.println("Name: " + key +
                     ", Type: " + identifier.getType() +
                     ", Kind: " + identifier.getKind() +
-                    ", Index: " + identifier.getRunningIndex());
+                    ", Index: " + identifier.runningIndex);
         } 
     
         System.out.println("\nMethod Level Map:");
@@ -133,7 +131,20 @@ public class SymbolTable {
             System.out.println("Name: " + key +
                     ", Type: " + identifier.getType() +
                     ", Kind: " + identifier.getKind() +
-                    ", Index: " + identifier.getRunningIndex());
+                    ", Index: " + identifier.runningIndex);
         }
     }
+
+    public void printLocalVariables() {
+    System.out.println("Local Variables in Method Level Map:");
+    for (Map.Entry<String, Identifier> entry : methodLevelMap.entrySet()) {
+        Identifier identifier = entry.getValue();
+        if (identifier.getKind().equals(Kind.LOCAL.toString())) {
+            System.out.println("Name: " + identifier.getName() +
+                               ", Type: " + identifier.getType() +
+                               ", Kind: " + identifier.getKind() +
+                               ", Index: " + identifier.runningIndex);
+        }
+    }
+}
 }

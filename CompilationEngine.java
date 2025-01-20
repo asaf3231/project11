@@ -1,14 +1,8 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 public class CompilationEngine {
 
-    private static BufferedReader reader;
-    private static BufferedWriter writer;
-    private static String currentToken;
+   
     private static JackTokenizer tokenizer;
     private static String tempString;
     private static String tempKind;
@@ -21,71 +15,77 @@ public class CompilationEngine {
     private static int labelIndex; 
     private static int numOfParm; 
     private static int numOfexp;
-
-
+    private static String functionType;
+    private static String returnType;
+    private static String functionName;
+    private static Identifier identifier;
+    private static String doTempStr;
+    private static int parenthesisCounter;
+    private static boolean isObj;
 
     public CompilationEngine (File inputFile, File outputFile) throws IOException{
-        reader = new BufferedReader(new FileReader(inputFile));
-        writer = new BufferedWriter(new FileWriter(outputFile));
         tokenizer = new JackTokenizer(inputFile);
         symbolTable = new SymbolTable();
         vmWriter = new VMWriter(outputFile);
         tempKind = "";
         tempIndex = 0 ;
         numOfParm = 0 ; 
-        labelIndex = 1 ;
+        labelIndex = 0 ;
+        isObj = false;
+        parenthesisCounter = 0 ; 
         numOfexp = 0 ; 
         tempString = "";
         className = "";
         negORNot = "";
         currOp = "";
         tokenizer.advance(); // Advance to the first token
-        currentToken = tokenizer.currToken; // Initialize currentToke
-        compileClass(); // Start compilation       
-        writer.flush();
-        writer.close();
+        compileClass(); // Start compilation 
+        
+        vmWriter.writer.flush();
+        vmWriter.writer.close();
     }
    
     public static void compileClass()  throws IOException{
         tokenizer.advance();
-        className = currentToken;
+        className = tokenizer.currToken;
         tokenizer.advance();
         tokenizer.advance();
 
-        while( currentToken.equals("field") || currentToken.equals("static") ){
+        while( tokenizer.currToken.equals("field") || tokenizer.currToken.equals("static") ){
             compileClassVarDec();
         }
 
-        while (currentToken.equals("constructor") || currentToken.equals("method") || currentToken.equals("function")) { 
+        while (tokenizer.currToken.equals("constructor") || tokenizer.currToken.equals("method") || tokenizer.currToken.equals("function")) { 
             compileSubroutine();
         }
-        tokenizer.advance();
-
     }
    
     public static void compileClassVarDec() throws IOException{
 
         String currtype;
-        if (currentToken.equals("static") ){
+        if (tokenizer.currToken.equals("static") ){
             tokenizer.advance();
-            currtype = currentToken;
+            currtype = tokenizer.currToken;
             tokenizer.advance();
-            symbolTable.define(currentToken, currtype , SymbolTable.Kind.STATIC);
+            symbolTable.define(tokenizer.currToken, currtype , SymbolTable.Kind.STATIC);
             tokenizer.advance();
-            while (!currentToken.equals(";")){
+            while (!tokenizer.currToken.equals(";")){
                 tokenizer.advance();
+                symbolTable.define(tokenizer.currToken, currtype , SymbolTable.Kind.STATIC);
                 tokenizer.advance();
             }
             tokenizer.advance();
         }   
-        else if (currentToken.equals("field")){
+        else if (tokenizer.currToken.equals("field")){
             tokenizer.advance();
-            currtype = currentToken;
+            currtype = tokenizer.currToken;
             tokenizer.advance();
-            symbolTable.define(currentToken, currtype , SymbolTable.Kind.THIS);            
+            symbolTable.define(tokenizer.currToken, currtype , SymbolTable.Kind.THIS);       
+     
             tokenizer.advance();
-            while (!currentToken.equals(";")){
+            while (!tokenizer.currToken.equals(";")){
                 tokenizer.advance();
+                symbolTable.define(tokenizer.currToken, currtype , SymbolTable.Kind.THIS);
                 tokenizer.advance();
             }
             tokenizer.advance();
@@ -95,53 +95,36 @@ public class CompilationEngine {
     public static void compileSubroutine() throws IOException{
         symbolTable.reset(); // Reset subroutine-level symbol table
 
-        String functionType = currentToken; // "constructor", "function", or "method"
+        functionType = tokenizer.currToken; // "constructor", "function", or "method"
         tokenizer.advance();
-        String returnType = currentToken;     // "void", "int", etc.
+        returnType = tokenizer.currToken;     // "void", "int", etc.
         tokenizer.advance();
-        String functionName = currentToken; // functionName name
+         functionName = tokenizer.currToken; // functionName name
         tokenizer.advance();
 
         if (functionType.equals("method")) {
-            symbolTable.define("this", className, SymbolTable.Kind.ARG);
+            symbolTable.define("this", className, SymbolTable.Kind.ARGUMENT);
         }
 
         tokenizer.advance();
         compileParameterList();
         tokenizer.advance();
+        compileSubroutineBody(); // Parse and define local variables
 
-        tokenizer.advance();
-        compileVarDec(); // Parse and define local variables
-
-        // Write VM function declaration
-        int nVars = symbolTable.varCount(SymbolTable.Kind.LOCAL);
-        vmWriter.writeFunction(className + "." + functionName, nVars);
-
-        if (functionType.equals("constructor")) {
-            vmWriter.writePush(VMWriter.Segment.CONSTANT, symbolTable.varCount(SymbolTable.Kind.THIS));
-            vmWriter.writeCall("Memory.alloc", 1);
-            vmWriter.writePop(VMWriter.Segment.POINTER, 0);
-        } else if (functionType.equals("method")) {
-            vmWriter.writePush(VMWriter.Segment.ARGUMENT, 0);
-            vmWriter.writePop(VMWriter.Segment.POINTER, 0);
-        }
-        compileStatements(); // Parse and compile statements
-        tokenizer.advance();
     }
     
     public static void compileParameterList() throws IOException {
         String currtype;
-
-        if (!currentToken.equals(")")){      
-            currtype = currentToken;
+        if (!tokenizer.currToken.equals(")")){      
+            currtype = tokenizer.currToken;
             tokenizer.advance();
-            symbolTable.define(currentToken, currtype, SymbolTable.Kind.ARG);
+            symbolTable.define(tokenizer.currToken, currtype, SymbolTable.Kind.ARGUMENT);
             tokenizer.advance();
-            while (!currentToken.equals(")")){
+            while (!tokenizer.currToken.equals(")")){
                 tokenizer.advance();
-                currtype = currentToken;
+                currtype = tokenizer.currToken;
                 tokenizer.advance();
-                symbolTable.define(currentToken, currtype, SymbolTable.Kind.ARG);
+                symbolTable.define(tokenizer.currToken, currtype, SymbolTable.Kind.ARGUMENT);
                 tokenizer.advance();
             }
         }
@@ -150,12 +133,27 @@ public class CompilationEngine {
     public static void compileSubroutineBody() throws IOException {
 
         tokenizer.advance();
-        while (currentToken.equals("var")){
+
+        while (tokenizer.currToken.equals("var")){
            compileVarDec();
         }
+
+        int nVars = symbolTable.varCount(SymbolTable.Kind.LOCAL);
+        vmWriter.writeFunction(className + "." + functionName, nVars);
+
+        if (functionType.equals("constructor")) {
+            vmWriter.writePush(VMWriter.Segment.CONSTANT, symbolTable.varCount(SymbolTable.Kind.THIS));
+            System.out.println(symbolTable.fieldIndex);
+            vmWriter.writeCall("Memory.alloc", 1);
+            vmWriter.writePop(VMWriter.Segment.POINTER, 0);
+        } else if (functionType.equals("method")) {
+            vmWriter.writePush(VMWriter.Segment.ARGUMENT, 0);
+            vmWriter.writePop(VMWriter.Segment.POINTER, 0);
+        }
+
+       
         compileStatements();
         tokenizer.advance();
-
     }
 
    public static void compileVarDec() throws IOException {
@@ -163,35 +161,36 @@ public class CompilationEngine {
         String currtype;
 
         tokenizer.advance();
-        currtype = currentToken;
+        currtype = tokenizer.currToken;
         tokenizer.advance();
-        symbolTable.define(currentToken, currtype, SymbolTable.Kind.LOCAL);
-        tokenizer.advance();
+        symbolTable.define(tokenizer.currToken, currtype, SymbolTable.Kind.LOCAL);
 
-        while (!currentToken.equals(";")){
+        tokenizer.advance();
+        while (!tokenizer.currToken.equals(";")){
             tokenizer.advance();
-            symbolTable.define(currentToken, currtype, SymbolTable.Kind.LOCAL); 
+            symbolTable.define(tokenizer.currToken, currtype, SymbolTable.Kind.LOCAL); 
             tokenizer.advance();
         }   
-        
         tokenizer.advance();
      }
    
      public static void compileStatements() throws IOException {
-        while(currentToken.equals("let") || currentToken.equals("do") || currentToken.equals("if") || currentToken.equals("while") || currentToken.equals("return")){
-            if (currentToken.equals("let")){
+        
+        while(tokenizer.currToken.equals("let") || tokenizer.currToken.equals("do") || tokenizer.currToken.equals("if") || tokenizer.currToken.equals("while") || tokenizer.currToken.equals("return")){
+            if (tokenizer.currToken.equals("let")){
                 compileLet();
             }
-            else if (currentToken.equals("if")){
+            else if (tokenizer.currToken.equals("if")){
                 compileIf();
             }
-            else if (currentToken.equals("do")){
+            else if (tokenizer.currToken.equals("do")){
                 compileDo();
+
             }
-            else if (currentToken.equals("while")){
+            else if (tokenizer.currToken.equals("while")){
                 compileWhile();
             }
-            else if (currentToken.equals("return")){
+            else if (tokenizer.currToken.equals("return")){
                 compileReturn();
             }
         }
@@ -201,63 +200,66 @@ public class CompilationEngine {
             tokenizer.advance();
 
         if ( tokenizer.tokenType().equals("IDENTIFIER") ) { 
+            String temp = tokenizer.currToken; 
 
-            tempString = currentToken;
+            if (symbolTable.methodLevelMap.containsKey(temp) || symbolTable.classLevelMap.containsKey(temp) ){
+                isObj =true;
+                temp = symbolTable.typeOf(temp);
+            }
             tokenizer.advance();
-            currentToken = tokenizer.currToken;
 
-            if (currentToken.equals("(")) {
+            if (tokenizer.currToken.equals("(")) {
                 tokenizer.advance();
                 compileExpressionList();
                 tokenizer.advance();
                
             }   
-            else if (currentToken.equals(".")) {
-                tempString += currentToken;
+            else if (tokenizer.currToken.equals(".")) {
+                tempString += temp;
+                tempString += tokenizer.currToken;
                 tokenizer.advance();
-                currentToken = tokenizer.currToken;
-                tempString += currentToken;
                 compileTerm();
             }
             
         }
-        vmWriter.writeCall(tempString, numOfParm);
-        tempString = "";
 
         vmWriter.writePop(VMWriter.Segment.TEMP, 0);
         tokenizer.advance();
     }
 
     public static void compileReturn() throws IOException {    
+
         tokenizer.advance();
-        if (currentToken.equals(";")){
+    
+
+        if (tokenizer.currToken.equals(";")){
             vmWriter.writePush(VMWriter.Segment.CONSTANT, 0);
             vmWriter.writeReturn();
         }
-        if (!currentToken.equals(";")){
+
+        else if (!tokenizer.currToken.equals(";")){
             compileExpression();
             vmWriter.writeReturn();
         }
-        tokenizer.advance();
+
+        tokenizer.advance();      
+
     }
     
     public static void compileLet() throws IOException{
-     
+
+        tokenizer.advance();
+        tempKind = symbolTable.kindOf(tokenizer.currToken);
+        tempIndex = symbolTable.indexOf(tokenizer.currToken);
         tokenizer.advance();
 
-        currentToken = tokenizer.currToken;
-        tempString = currentToken;
-        tempKind = symbolTable.kindOf(tempString);
-        tempIndex = symbolTable.indexOf(tempString);
-        tokenizer.advance();
 
-        if (currentToken.equals("[") ) {
+        if (tokenizer.currToken.equals("[") ) {
 
-            vmWriter.writePush(VMWriter.Segment.valueOf(tempKind.toUpperCase()),tempIndex);
             tokenizer.advance();
 
             compileExpression();
-
+            vmWriter.writePush(VMWriter.Segment.valueOf(tempKind.toUpperCase()),tempIndex);
             tokenizer.advance();
             vmWriter.writeArithmetic(VMWriter.Command.ADD);
         
@@ -265,28 +267,25 @@ public class CompilationEngine {
             compileExpression();
             tokenizer.advance();        
 
-            vmWriter.writePop(VMWriter.Segment.POINTER, 1);
-            vmWriter.writePush(VMWriter.Segment.THAT, 0);
+
+
             vmWriter.writePop(VMWriter.Segment.TEMP, 0);
             vmWriter.writePop(VMWriter.Segment.POINTER, 1);
             vmWriter.writePush(VMWriter.Segment.TEMP, 0);
             vmWriter.writePop(VMWriter.Segment.THAT, 0);
         }
         else{
-
             tokenizer.advance();
             compileExpression();
             tokenizer.advance();
-
             vmWriter.writePop(VMWriter.Segment.valueOf(tempKind.toUpperCase()),tempIndex);
-
         }
-
+    
     }
 
     public static void compileWhile() throws IOException {
 
-        vmWriter.writeLabel("Label L" + labelIndex);
+        vmWriter.writeLabel("label "+ className+ "_" + labelIndex);
         labelIndex ++ ; 
         tokenizer.advance();
         tokenizer.advance();
@@ -297,12 +296,12 @@ public class CompilationEngine {
         tokenizer.advance();
 
         vmWriter.writeArithmetic(VMWriter.Command.NOT);
-        vmWriter.writeIf("if-goto L" + labelIndex );
+        vmWriter.writeIf("if-goto "  + className + "_" + labelIndex );
 
         compileStatements();
 
-        vmWriter.writeGoto("goto L" +  (labelIndex - 1));
-        vmWriter.writeLabel("Label L" + labelIndex);
+        vmWriter.writeGoto("goto " + className + "_" +  (labelIndex - 1));
+        vmWriter.writeLabel("label "+ className+ "_" + labelIndex);
         labelIndex ++ ; 
 
         tokenizer.advance();
@@ -317,7 +316,7 @@ public class CompilationEngine {
         compileExpression();
 
         vmWriter.writeArithmetic(VMWriter.Command.NOT);
-        vmWriter.writeIf("if-goto L" + labelIndex );
+        vmWriter.writeIf("if-goto " + className+ "_" + labelIndex );
         labelIndex ++ ; 
 
         tokenizer.advance();
@@ -325,20 +324,19 @@ public class CompilationEngine {
 
         compileStatements();
 
-        vmWriter.writeGoto("goto L" +  (labelIndex));
-        vmWriter.writeLabel("Label L" + (labelIndex -1));
+        vmWriter.writeGoto("goto " + className+ "_" + (labelIndex));
+        vmWriter.writeLabel("label " + className+ "_" + (labelIndex -1));
        
 
         tokenizer.advance();
-        currentToken = tokenizer.currToken;
         
-        if (currentToken.equals("else")){
+        if (tokenizer.currToken.equals("else")){
 
             tokenizer.advance();
             tokenizer.advance();
 
             compileStatements();
-            vmWriter.writeLabel("Label L" +labelIndex );
+            vmWriter.writeLabel("label " + className+ "_" +labelIndex );
 
             tokenizer.advance();
         }
@@ -349,7 +347,7 @@ public class CompilationEngine {
     public static void compileExpression() throws IOException {
        
         compileTerm();
-        while(currentToken.equals("+") || currentToken.equals("-") || currentToken.equals("*") || currentToken.equals("/") || currentToken.equals("&") || currentToken.equals("|") || currentToken.equals("<") ||currentToken.equals(">") || currentToken.equals("=")){
+        while(tokenizer.currToken.equals("+") || tokenizer.currToken.equals("-") || tokenizer.currToken.equals("*") || tokenizer.currToken.equals("/") || tokenizer.currToken.equals("&") || tokenizer.currToken.equals("|") || tokenizer.currToken.equals("<") ||tokenizer.currToken.equals(">") || tokenizer.currToken.equals("=")){
             currOp = tokenizer.currToken;
             tokenizer.advance();
             compileTerm(); 
@@ -361,7 +359,7 @@ public class CompilationEngine {
                     vmWriter.writeCall("Math.multiply" , 2);
                     break;
                 case "/":
-                vmWriter.writeCall("Math.divide" , 2);
+                    vmWriter.writeCall("Math.divide" , 2);
                     break;
                 case "|":
                     vmWriter.writeArithmetic(VMWriter.Command.OR);
@@ -394,7 +392,6 @@ public class CompilationEngine {
         else if ( tokenizer.tokenType().equals("STRING_CONST") ) {
             // Handle string constant
             String stringVal = tokenizer.currToken.substring(1, tokenizer.currToken.length() - 1 ); // Get the string constant value
-           
             vmWriter.writePush(VMWriter.Segment.CONSTANT, stringVal.length());
             vmWriter.writeCall("String.new", 1);
 
@@ -425,13 +422,13 @@ public class CompilationEngine {
 
         else if ( tokenizer.tokenType().equals("SYMBOL") ){
 
-            if( currentToken.equals("(")){
+            if( tokenizer.currToken.equals("(")){
                 tokenizer.advance();
                 compileExpression();
                 tokenizer.advance();
             }
 
-            else if(currentToken.equals("~") || currentToken.equals("-")) {
+            else if(tokenizer.currToken.equals("~") || tokenizer.currToken.equals("-")) {
                 negORNot = tokenizer.currToken;
                 tokenizer.advance();
                 compileTerm();
@@ -446,46 +443,72 @@ public class CompilationEngine {
             }
         }
 
-        if ( tokenizer.tokenType().equals("IDENTIFIER") ) { 
-            tempString = tokenizer.currToken;
+        else if ( tokenizer.tokenType().equals("IDENTIFIER") ) { 
+            String temp = tokenizer.currToken;
             tokenizer.advance();
-            currentToken = tokenizer.currToken;
 
-            if (currentToken.equals("(")) {
+            if (tokenizer.currToken.equals("(")) {
+                tempString += temp + "";
                 tokenizer.advance();
                 compileExpressionList();
+                if (isObj){
+                    numOfexp++;
+                    vmWriter.writePush(VMWriter.Segment.LOCAL, 0);
+                    isObj= false;
+                }
                 vmWriter.writeCall(tempString, numOfexp);
                 tokenizer.advance();
+                tempString= "";
             }
-            else if (currentToken.equals("[")) {
+            else if (tokenizer.currToken.equals("[")) {
                 tokenizer.advance();
                 compileExpression(); 
+                vmWriter.writePush(VMWriter.Segment.valueOf(symbolTable.kindOf(temp)), symbolTable.indexOf(temp));
+                vmWriter.writeArithmetic(VMWriter.Command.ADD);
+                vmWriter.writePop(VMWriter.Segment.POINTER, 1);
+                vmWriter.writePush(VMWriter.Segment.THAT, 0);
                 tokenizer.advance();
             }
-            else if (currentToken.equals(".")) {
+            else if (tokenizer.currToken.equals(".")) {
+                tempString += temp;
+                tempString += ".";
                 tokenizer.advance();
                 compileTerm();
+                tempString= "";
+            }
+            else{
+                vmWriter.writePush(VMWriter.Segment.valueOf(symbolTable.kindOf(temp)) , symbolTable.indexOf(temp));
             }
         }
     }
    
     public static int compileExpressionList() throws IOException{
-        if (!currentToken.equals(")")) {
+        numOfexp = 0 ; 
+        parenthesisCounter = 1 ;
+        if (!tokenizer.currToken.equals(")")) {
             compileExpression();
             numOfexp ++ ;
         }
-        while (!currentToken.equals(";")) {
-            // Break the loop if the current token is ")" and the next token is ";"
-            if (currentToken.equals(")") && tokenizer.nextToken.equals(";")) {
-                break;
+
+        while (parenthesisCounter > 0 ) {
+            if (tokenizer.currToken.equals("(")) {
+                parenthesisCounter++; // Increment for nested '('
             }
-    
-            if (currentToken.equals(",")) {
+            else if (tokenizer.currToken.equals(")")) {
+                parenthesisCounter--; // Decrement for closing ')'
+
+                // Exit when the parenthesis count returns to zero
+                if (parenthesisCounter == 0) {
+                    break;
+                }
+            }
+            else if (tokenizer.currToken.equals(",")) {
                 tokenizer.advance();
                 compileExpression();
                 numOfexp ++ ;
             }
         }
+
         return numOfexp;
     }
 }

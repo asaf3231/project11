@@ -15,7 +15,7 @@ public class JackTokenizer {
     public static String currToken;
     public static String nextToken;
     private static ArrayList<String> tokens ;
-    private static int counter;
+    public static int counter;
     private static HashMap<String,String> map ; 
 
     public JackTokenizer(File file) throws IOException {
@@ -47,11 +47,10 @@ public class JackTokenizer {
             int commentphrase = currLine.indexOf("/*");
             int endOfCommentPhrase = currLine.indexOf("*/");
             if (commentphrase != -1) {
-                if(endOfCommentPhrase != -1){
+                if (endOfCommentPhrase != -1) {
                     advanceline();
-                }
-                else{
-                    while(endOfCommentPhrase == -1 ){
+                } else {
+                    while (endOfCommentPhrase == -1) {
                         advanceline(); // Skip comment-only lines
                         endOfCommentPhrase = currLine.indexOf("*/");
                     }
@@ -104,8 +103,26 @@ public class JackTokenizer {
             if (token.length() > 0) {
                 tokens.add(token.toString());
             }
-                advanceline(); // Move to the next line
-           
+    
+            advanceline(); // Move to the next line
+        }
+    
+        // Add any remaining token in the buffer
+        if (currLine != null && !currLine.isEmpty()) {
+            StringBuilder token = new StringBuilder();
+            for (int i = 0; i < currLine.length(); i++) {
+                char c = currLine.charAt(i);
+    
+                if (Character.isWhitespace(c) && token.length() > 0) {
+                    tokens.add(token.toString());
+                    token.setLength(0);
+                } else {
+                    token.append(c);
+                }
+            }
+            if (token.length() > 0) {
+                tokens.add(token.toString());
+            }
         }
     }
 
@@ -169,10 +186,13 @@ public class JackTokenizer {
             currToken = tokens.get(counter);
             counter++;
             nextToken = tokens.get(counter);
+
         } else if (counter < tokens.size()) { // Handle the last token
+            System.out.println(counter);    
             currToken = tokens.get(counter);
             nextToken = null; // No next token available
             counter++;
+           
         } else {
             throw new IndexOutOfBoundsException("No more tokens to advance.");
         }
