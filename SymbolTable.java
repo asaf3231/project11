@@ -84,10 +84,11 @@ public class SymbolTable {
     public String kindOf(String name) {
 
         if ( methodLevelMap.containsKey(name) ) {
-            return methodLevelMap.get(name).getKind();    
+            return methodLevelMap.get(name).kind;    
         }
         else if ( classLevelMap.containsKey(name) ) {
-            return classLevelMap.get(name).getKind();    
+            System.out.println(classLevelMap.get(name).kind);
+            return classLevelMap.get(name).kind.toUpperCase();    
         } 
 
         return Kind.NONE.toString();
@@ -121,7 +122,7 @@ public class SymbolTable {
             Identifier identifier = classLevelMap.get(key);
             System.out.println("Name: " + key +
                     ", Type: " + identifier.getType() +
-                    ", Kind: " + identifier.getKind() +
+                    ", Kind: " + identifier.kind +
                     ", Index: " + identifier.runningIndex);
         } 
     
@@ -130,19 +131,19 @@ public class SymbolTable {
             Identifier identifier = methodLevelMap.get(key);
             System.out.println("Name: " + key +
                     ", Type: " + identifier.getType() +
-                    ", Kind: " + identifier.getKind() +
+                    ", Kind: " + identifier.kind +
                     ", Index: " + identifier.runningIndex);
         }
     }
 
     public void printLocalVariables() {
     System.out.println("Local Variables in Method Level Map:");
-    for (Map.Entry<String, Identifier> entry : methodLevelMap.entrySet()) {
+    for (Map.Entry<String, Identifier> entry : classLevelMap.entrySet()) {
         Identifier identifier = entry.getValue();
-        if (identifier.getKind().equals(Kind.LOCAL.toString())) {
+        if (identifier.kind.equals(Kind.THIS.toString())) {
             System.out.println("Name: " + identifier.getName() +
                                ", Type: " + identifier.getType() +
-                               ", Kind: " + identifier.getKind() +
+                               ", Kind: " + identifier.kind +
                                ", Index: " + identifier.runningIndex);
         }
     }

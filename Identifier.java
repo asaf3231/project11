@@ -3,7 +3,7 @@ public class Identifier {
     
     private static String name; 
     private static String type; 
-    private static String kind; 
+    public  String kind; 
     public  int runningIndex;
     
     
@@ -21,9 +21,7 @@ public class Identifier {
     public static String getType() {
         return type;
     }
-    public static String getKind() {
-        return kind;
-    }
+   
     @Override
     public String toString() {
         return "Identifier{name='" + name + "', type='" + type + "', kind='" + kind + "', runningIndex=" + runningIndex + "}";

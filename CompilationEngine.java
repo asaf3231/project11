@@ -63,6 +63,7 @@ public class CompilationEngine {
     public static void compileClassVarDec() throws IOException{
 
         String currtype;
+
         if (tokenizer.currToken.equals("static") ){
             tokenizer.advance();
             currtype = tokenizer.currToken;
@@ -76,12 +77,12 @@ public class CompilationEngine {
             }
             tokenizer.advance();
         }   
+
         else if (tokenizer.currToken.equals("field")){
             tokenizer.advance();
             currtype = tokenizer.currToken;
             tokenizer.advance();
             symbolTable.define(tokenizer.currToken, currtype , SymbolTable.Kind.THIS);       
-     
             tokenizer.advance();
             while (!tokenizer.currToken.equals(";")){
                 tokenizer.advance();
@@ -143,7 +144,6 @@ public class CompilationEngine {
 
         if (functionType.equals("constructor")) {
             vmWriter.writePush(VMWriter.Segment.CONSTANT, symbolTable.varCount(SymbolTable.Kind.THIS));
-            System.out.println(symbolTable.fieldIndex);
             vmWriter.writeCall("Memory.alloc", 1);
             vmWriter.writePop(VMWriter.Segment.POINTER, 0);
         } else if (functionType.equals("method")) {
@@ -253,7 +253,6 @@ public class CompilationEngine {
         tempIndex = symbolTable.indexOf(tokenizer.currToken);
         tokenizer.advance();
 
-
         if (tokenizer.currToken.equals("[") ) {
 
             tokenizer.advance();
@@ -280,7 +279,6 @@ public class CompilationEngine {
             tokenizer.advance();
             vmWriter.writePop(VMWriter.Segment.valueOf(tempKind.toUpperCase()),tempIndex);
         }
-    
     }
 
     public static void compileWhile() throws IOException {
