@@ -1,0 +1,252 @@
+class Main{
+
+    function void main(){
+
+        var Spaceship spaceship;
+        var AlienManager alienManager;
+        var int x,y,i;
+        var int count;
+        var Alien alien;
+        var Sys sys;  
+        var Array bul; 
+        var Projectile currBullet; 
+        var int counter;
+        var boolean flag;
+        var int win_counter;
+        var boolean lastKeyState;
+        var int modifier;
+        var int stepCounter;
+        var boolean decrease;
+        var boolean lostGame;
+        var boolean winGame;
+        var int score;
+        var int remain;
+        var boolean gameOver;
+        var boolean bigFlag;
+        var int level; 
+        var Graphics graphics;
+        var int i;
+        var Asteroid asteroid;
+        var SingleAsteroid singleasteroid;
+        var int j ;
+        var boolean asteroidCreation;
+        var Random random ;
+        var int randomNum;
+
+        let graphics = Graphics.new();
+        do graphics.drawText();
+
+        while (~(Keyboard.keyPressed() = 128)) { 
+            do Sys.wait(10);
+        }
+
+        do graphics.clearScreen();
+        do graphics.letsGo();
+
+        while (~(Keyboard.keyPressed() = 128)) { 
+            do Sys.wait(10);
+        }
+        
+        do graphics.clearScreen();    
+        let bigFlag = true;
+        let level = 1;
+
+        // An unending loop    
+        while (true) {
+            let score = 0;
+            let bigFlag = true; // starting the game again
+            let level = 1;
+            while (bigFlag) {
+
+                //initializes all the objects for thr game     
+                let remain = score;
+                let spaceship = Spaceship.new(14, 230);
+                let alienManager = AlienManager.new(100, 256, 240);
+                let asteroid = Asteroid.new();
+                let random = Random.new(13 * level);
+                let count = 1;
+                let lostGame = false;
+                let winGame = false;
+                let flag = true;
+                let win_counter = 0;
+                let lastKeyState = false;
+                let counter = 0;
+                let stepCounter = 0;
+                let modifier = 0;
+                let decrease = false;
+                let i = 0;
+                let j = 0;
+                let asteroidCreation = false;
+                let randomNum = 0 ;
+
+                do spaceship.draw(10 ,400);
+                do spaceship.moveRight();
+
+                // adding all the aliens
+                do alienManager.addAlien(3, 10);
+                do alienManager.addAlien(6, 10);
+                do alienManager.addAlien(9, 10);
+                do alienManager.addAlien(12, 10);
+                do alienManager.addAlien(15, 10);
+                do alienManager.addAlien(18, 10);
+                do alienManager.addAlien(21, 10);
+                do alienManager.addAlien(24, 10);
+                do alienManager.addAlien(27, 10);
+                do alienManager.drawAll();
+                
+                // controling the speed of the asteroids
+                while (j < (level * 2)){
+                    let randomNum = random.generateRandom(1,30);
+                    while (spaceship.isHit(randomNum)){
+                        let randomNum = random.generateRandom(1,30);
+                    }
+                    if (asteroidCreation) {
+                        do asteroid.addAsteroid(randomNum, 240, true);
+                        let asteroidCreation = false; // Toggle flag
+                    } else {
+                        do asteroid.addAsteroid(randomNum, 3, false);
+                        let asteroidCreation = true; // Toggle flag
+                    }
+                    let j = j + 1 ;
+                }
+                do asteroid.drawAll();
+                
+                let lostGame = false;
+                let winGame = false;
+
+
+                while (flag) {
+                    let counter = counter + 100;
+
+                    // Trigger alien movement when counter reaches the threshold
+                    if (counter > 200) {
+                        do alienManager.alienGoDown(level); // Move aliens down
+                        let counter = 0; // Reset the counter
+                    }
+                    
+                    // moving the spaceShip
+                    do spaceship.moveSpaceShip(Keyboard.keyPressed());
+                    do spaceship.shoot(Keyboard.keyPressed()); // Fire a bullet
+                    do spaceship.updateBullets(alienManager , asteroid); // checking all the conditions
+
+                    // checking asteroid Collision
+                    if (asteroid.checkCollision(spaceship.getX(), spaceship.getY())){
+                        let flag = false;
+                        let lostGame = true;
+                        let gameOver = false;
+                        let winGame = false;
+                        let bigFlag = false;
+                    }
+
+                    // checking Alien Collision
+                    if (alienManager.checkHitShip(spaceship.getX(), spaceship.getY())){
+                        let flag = false;
+                        let lostGame = true;
+                        let gameOver = false;
+                        let winGame = false;
+                        let bigFlag = false;
+                    }   
+
+                    // moving the asteroids
+                    do asteroid.moveAll(level);
+                    let score = alienManager.getScore() + remain;
+                    do graphics.displayScore(score);
+                    
+                    // Check if the aliens won
+                    if ( alienManager.lost() ) {
+                        let lostGame = true;
+                        let  flag = false;
+                    }
+
+                    // Check for end game condition
+                    if ( alienManager.gethowManyDead() = 9 ) {
+                        let level = level + 1;
+                        let winGame = true;
+                        let flag = false;
+                    } 
+
+                    // finishes the game
+                    if ( score = 360 ) {
+                        let flag = false;
+                        let gameOver = true;
+                        let winGame = false;
+                        let lostGame = false;
+                    }
+                    do Sys.wait(2);
+                }
+
+                // clearing the screen
+                do graphics.clearScreen();
+
+                // gameOver window
+                if ( gameOver ) {
+                    let bigFlag = false;
+                    
+                     
+                }
+
+                // winGame window 
+                if ( winGame ) { 
+
+                    do graphics.nextLevel(level);
+                    do Memory.deAlloc(spaceship);
+
+                    while (~(Keyboard.keyPressed() = 32)) { 
+                        do Sys.wait(10);
+                    }
+
+                    do graphics.clearScreen();
+                    do Sys.wait(1000);
+                }
+
+                // lostGame window 
+                if (lostGame ){
+                    let flag = false;
+                    let gameOver = false;
+                    let winGame = false;
+                    let bigFlag = false;
+            
+                    do Sys.wait(1000);
+                }
+
+                do Memory.deAlloc(spaceship);
+                //do Memory.deAlloc(alienManager);
+
+                while ( i < alienManager.getAlienCount() ) {
+                    do Memory.deAlloc(alienManager[i]);
+                    let i = i + 1;
+                }
+                do Memory.deAlloc(alienManager);
+            }
+                do graphics.clearScreen();
+
+                if (gameOver) {
+                    do graphics.lastScreen();
+                    while (~(Keyboard.keyPressed() = 32)) { 
+                        do Sys.wait(10);
+                    }
+                }
+
+                if (lostGame) {
+                    do graphics.lostScreen();
+                    while (~(Keyboard.keyPressed() = 32)) { 
+                        do Sys.wait(10);
+                    }
+                }
+
+                do graphics.clearScreen();
+                do graphics.playAgain();
+
+                while (~(Keyboard.keyPressed() = 112)) { 
+                    do Sys.wait(10);
+                }
+        
+                do graphics.clearScreen();
+                let flag = true;
+                let bigFlag = true;
+
+            }
+
+        return;       
+    }
+}

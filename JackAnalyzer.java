@@ -35,7 +35,7 @@ public class JackAnalyzer {
 
             // 4) For each .jack file, create a corresponding .xml output and compile
             for (File jackFile : jackFiles) {
-                String outFileName = jackFile.getAbsolutePath().replace(".jack", ".xml");
+                String outFileName = jackFile.getAbsolutePath().replace(".jack", ".vm");
                 File outFile = new File(outFileName);
                 System.out.println("Compiling " + jackFile.getName() + " -> " + outFile.getName());
                 new CompilationEngine(jackFile, outFile);
@@ -47,7 +47,7 @@ public class JackAnalyzer {
                 System.out.println("Error: Input file must have a .jack extension.");
                 return;
             }
-            String outFileName = source.getAbsolutePath().replace(".jack", ".xml");
+            String outFileName = source.getAbsolutePath().replace(".jack", ".vm");
             File outFile = new File(outFileName);
             System.out.println("Compiling " + source.getName() + " -> " + outFile.getName());
             new CompilationEngine(source, outFile);

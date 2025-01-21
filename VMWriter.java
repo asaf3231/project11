@@ -64,7 +64,6 @@ public class VMWriter {
     public void writeIf(String label)throws IOException {
         writer.write("    " + label);
         writer.newLine();
-
     }
 
     
@@ -78,7 +77,6 @@ public class VMWriter {
     public void writeFunction(String name, int nVars) throws IOException{
         writer.write("function " + name + " " + nVars);
         writer.newLine();
-
     }
 
     

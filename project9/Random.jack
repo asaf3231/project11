@@ -1,0 +1,27 @@
+class Random {
+    field int seed; // Seed for random number generation
+
+    constructor Random new(int initialSeed) {
+        let seed = initialSeed;
+        return this;
+    }
+
+    
+    //Generates the next random number within a range [min, max].
+    method int generateRandom(int min, int max) {
+        var int range, quotient, product, remainder, randomNumber;
+        let range = max - min + 1;
+        let seed = (Math.multiply(13, seed) + 51);
+        let quotient = Math.divide(seed, range);       
+        let product = Math.multiply(quotient, range); 
+        let remainder = seed - product;               
+        let randomNumber = remainder + min;
+        return randomNumber;
+    }
+
+    //Method: Sets a new seed for the random number generator.
+    method void setSeed(int newSeed) {
+        let seed = newSeed;
+        return;
+    }
+}

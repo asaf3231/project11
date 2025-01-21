@@ -9,7 +9,6 @@ public class CompilationEngine {
     private static int tempIndex;
     private static SymbolTable symbolTable;
     private static String className;
-    private static String currOp;
     private static String negORNot;
     private static VMWriter vmWriter;
     private static int labelIndex; 
@@ -19,9 +18,13 @@ public class CompilationEngine {
     private static String returnType;
     private static String functionName;
     private static Identifier identifier;
+    private static int ifIndex;  
+    private static int whileIndex; 
     private static String doTempStr;
     private static int parenthesisCounter;
     private static boolean isObj;
+    private static boolean isObjLet;
+    private static int indexOfObject;
 
     public CompilationEngine (File inputFile, File outputFile) throws IOException{
         tokenizer = new JackTokenizer(inputFile);
@@ -30,17 +33,19 @@ public class CompilationEngine {
         tempKind = "";
         tempIndex = 0 ;
         numOfParm = 0 ; 
+        ifIndex = 0;
+        whileIndex = 0;
         labelIndex = 0 ;
         isObj = false;
+        isObjLet = false;
+        indexOfObject = 0;
         parenthesisCounter = 0 ; 
         numOfexp = 0 ; 
         tempString = "";
         className = "";
         negORNot = "";
-        currOp = "";
         tokenizer.advance(); // Advance to the first token
         compileClass(); // Start compilation 
-        
         vmWriter.writer.flush();
         vmWriter.writer.close();
     }
@@ -185,7 +190,6 @@ public class CompilationEngine {
             }
             else if (tokenizer.currToken.equals("do")){
                 compileDo();
-
             }
             else if (tokenizer.currToken.equals("while")){
                 compileWhile();
@@ -198,31 +202,38 @@ public class CompilationEngine {
    
     public static void compileDo() throws IOException {
             tokenizer.advance();
+            Boolean methodInClass = true;
 
         if ( tokenizer.tokenType().equals("IDENTIFIER") ) { 
             String temp = tokenizer.currToken; 
 
             if (symbolTable.methodLevelMap.containsKey(temp) || symbolTable.classLevelMap.containsKey(temp) ){
                 isObj =true;
+                vmWriter.writePush(VMWriter.Segment.valueOf(symbolTable.kindOf(temp)), symbolTable.indexOf(temp));
                 temp = symbolTable.typeOf(temp);
             }
+
             tokenizer.advance();
 
             if (tokenizer.currToken.equals("(")) {
                 tokenizer.advance();
+                if (methodInClass){
+                    vmWriter.writePush(VMWriter.Segment.POINTER, 0);
+                }
                 compileExpressionList();
+                if (methodInClass){
+                    vmWriter.writeCall(className + "." + temp, numOfexp + 1 );
+                }
                 tokenizer.advance();
-               
             }   
             else if (tokenizer.currToken.equals(".")) {
+                methodInClass =false;
                 tempString += temp;
                 tempString += tokenizer.currToken;
                 tokenizer.advance();
                 compileTerm();
             }
-            
         }
-
         vmWriter.writePop(VMWriter.Segment.TEMP, 0);
         tokenizer.advance();
     }
@@ -274,7 +285,7 @@ public class CompilationEngine {
             vmWriter.writePop(VMWriter.Segment.THAT, 0);
         }
         else{
-            tokenizer.advance();
+            tokenizer.advance();  
             compileExpression();
             tokenizer.advance();
             vmWriter.writePop(VMWriter.Segment.valueOf(tempKind.toUpperCase()),tempIndex);
@@ -283,24 +294,25 @@ public class CompilationEngine {
 
     public static void compileWhile() throws IOException {
 
-        vmWriter.writeLabel("label "+ className+ "_" + labelIndex);
+        int rememberwhile = labelIndex;
+        vmWriter.writeLabel("label "+ className+ "_" + rememberwhile);
+        labelIndex ++ ; 
         labelIndex ++ ; 
         tokenizer.advance();
         tokenizer.advance();
 
         compileExpression();
-
         tokenizer.advance();
         tokenizer.advance();
 
         vmWriter.writeArithmetic(VMWriter.Command.NOT);
-        vmWriter.writeIf("if-goto "  + className + "_" + labelIndex );
-
+        vmWriter.writeIf("if-goto "  + className + "_" + (rememberwhile + 1));
+        
         compileStatements();
 
-        vmWriter.writeGoto("goto " + className + "_" +  (labelIndex - 1));
-        vmWriter.writeLabel("label "+ className+ "_" + labelIndex);
-        labelIndex ++ ; 
+        vmWriter.writeGoto("goto " + className + "_" +  (rememberwhile));
+        vmWriter.writeLabel("label "+ className+ "_" + (rememberwhile + 1));
+         
 
         tokenizer.advance();
 
@@ -313,17 +325,19 @@ public class CompilationEngine {
 
         compileExpression();
 
+        int remember = labelIndex;
+        labelIndex ++ ;
+        labelIndex ++ ;
         vmWriter.writeArithmetic(VMWriter.Command.NOT);
-        vmWriter.writeIf("if-goto " + className+ "_" + labelIndex );
-        labelIndex ++ ; 
-
+        vmWriter.writeIf("if-goto " + className+ "_" + (remember+1) );
+       
         tokenizer.advance();
         tokenizer.advance();
 
         compileStatements();
 
-        vmWriter.writeGoto("goto " + className+ "_" + (labelIndex));
-        vmWriter.writeLabel("label " + className+ "_" + (labelIndex -1));
+        vmWriter.writeGoto("goto " + className+ "_" + (remember ));
+        vmWriter.writeLabel("label " + className+ "_" + (remember+1 ));
        
 
         tokenizer.advance();
@@ -332,21 +346,16 @@ public class CompilationEngine {
 
             tokenizer.advance();
             tokenizer.advance();
-
             compileStatements();
-            vmWriter.writeLabel("label " + className+ "_" +labelIndex );
-
             tokenizer.advance();
         }
-        labelIndex ++ ; 
-
+        vmWriter.writeLabel("label " + className+ "_" + remember );
     }
-    
     public static void compileExpression() throws IOException {
        
         compileTerm();
         while(tokenizer.currToken.equals("+") || tokenizer.currToken.equals("-") || tokenizer.currToken.equals("*") || tokenizer.currToken.equals("/") || tokenizer.currToken.equals("&") || tokenizer.currToken.equals("|") || tokenizer.currToken.equals("<") ||tokenizer.currToken.equals(">") || tokenizer.currToken.equals("=")){
-            currOp = tokenizer.currToken;
+            String currOp = tokenizer.currToken;
             tokenizer.advance();
             compileTerm(); 
             switch (currOp) {
@@ -355,6 +364,9 @@ public class CompilationEngine {
                     break;
                 case "*":
                     vmWriter.writeCall("Math.multiply" , 2);
+                    break;
+                case "-":
+                vmWriter.writeArithmetic(VMWriter.Command.SUB);
                     break;
                 case "/":
                     vmWriter.writeCall("Math.divide" , 2);
@@ -451,8 +463,12 @@ public class CompilationEngine {
                 compileExpressionList();
                 if (isObj){
                     numOfexp++;
-                    vmWriter.writePush(VMWriter.Segment.LOCAL, 0);
                     isObj= false;
+                }
+                if (isObjLet) {
+                    numOfexp++;
+                    vmWriter.writePush(VMWriter.Segment.THIS, indexOfObject);
+                    isObjLet = false;
                 }
                 vmWriter.writeCall(tempString, numOfexp);
                 tokenizer.advance();
@@ -468,6 +484,12 @@ public class CompilationEngine {
                 tokenizer.advance();
             }
             else if (tokenizer.currToken.equals(".")) {
+                if (symbolTable.methodLevelMap.containsKey(temp) || symbolTable.classLevelMap.containsKey(temp) ){
+                    indexOfObject = symbolTable.indexOf(temp);
+                    System.out.println(indexOfObject);
+                    temp = symbolTable.typeOf(temp);
+                    isObjLet =true;
+                }
                 tempString += temp;
                 tempString += ".";
                 tokenizer.advance();

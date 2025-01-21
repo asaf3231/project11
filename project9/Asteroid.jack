@@ -1,0 +1,110 @@
+class Asteroid {
+
+    field int asteroidCount;
+    field Array asteroids;
+
+    constructor Asteroid new() {
+        let asteroids = Array.new(10);
+        let asteroidCount = 0;
+        return this;
+    }
+
+    // method for adding an Asteroid
+    method void addAsteroid(int x, int y, boolean moveUp) {
+        let asteroids[asteroidCount] = SingleAsteroid.new(x, y, moveUp);
+        let asteroidCount = asteroidCount + 1;
+        return;
+    }   
+    
+    // drawing the Asteroids
+    method void drawAll() {
+        var int i;
+        var SingleAsteroid currAsteroid;    
+        let i = 0;
+        while (i < 10) {
+            let currAsteroid = asteroids[i];
+            do currAsteroid.draw(currAsteroid.getX(), currAsteroid.getY());
+            let i = i + 1;
+        }
+        return;
+    }
+
+    // moving the Asteroids
+    method void moveAll(int k) {
+        var int i;
+        var SingleAsteroid currAsteroid;
+        let i = 0;
+        while (i < asteroidCount) {
+            let currAsteroid = asteroids[i];
+            if (currAsteroid.isAsteroidOffScreen()) { 
+                do currAsteroid.erase(currAsteroid.getX(),currAsteroid.getY());
+                do currAsteroid.destroy(); // Mark the asteroid as destroyed
+                do Memory.deAlloc(currAsteroid);
+                let asteroids[i] = asteroids[asteroidCount - 1]; // Replace with the last asteroid
+                let asteroids[asteroidCount - 1] = null; // Clear the last slot
+                let asteroidCount = asteroidCount - 1; // Decrease the count
+                let i = i - 1; // Adjust index
+            }else{
+                // Erase current position
+                do currAsteroid.erase(currAsteroid.getX(), currAsteroid.getY());
+                // Move asteroid up or down
+                if (currAsteroid.getMoveUp()) {
+                    do currAsteroid.setY(currAsteroid.getY() - 1);
+                } else {
+                    do currAsteroid.setY(currAsteroid.getY() + 1);
+                }
+                
+                do currAsteroid.draw(currAsteroid.getX(), currAsteroid.getY());
+            }
+            let i = i + 1;
+        }
+        do Sys.wait(2);
+        return;
+    }
+
+    // checking for Collision
+    method boolean checkCollision(int shipX, int shipY) {
+        var int i;
+        var SingleAsteroid currAsteroid;
+        let i = 0;
+        while (i < asteroidCount) {
+            let currAsteroid = asteroids[i];
+            // Check if the current asteroid is alive and has hit the spaceship
+            if ( currAsteroid.getIsAlive() & currAsteroid.isHit(shipX, shipY)) {
+                return true;
+            }
+            let i = i + 1;
+        }
+        return false; // No collision
+    }
+
+    // checking for hit
+    method void checkHit(int projectileX, int projectileY) {
+        var int i;
+        var SingleAsteroid currAsteroid;
+        let i = 0;
+        while (i < 2) {
+            let currAsteroid = asteroids[i];
+            if (currAsteroid.getIsAlive() & currAsteroid.isHit(projectileX,projectileY)){
+                do currAsteroid.erase(currAsteroid.getX(), currAsteroid.getY()); 
+                do currAsteroid.destroy(); 
+                do Memory.deAlloc(currAsteroid);   
+                let asteroids[i] = asteroids[asteroidCount - 1]; // Replace with the last asteroid
+                let asteroids[asteroidCount - 1] = null; // Clear the last slot
+                let asteroidCount = asteroidCount - 1; // Decrease the count
+                let i = i - 1; // Adjust index
+                
+            }
+            let i = i + 1; 
+        }
+        return; 
+    }
+}
+
+
+
+
+
+
+
+

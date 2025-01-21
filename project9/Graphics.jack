@@ -1,0 +1,136 @@
+class Graphics {
+
+    function Graphics new() {
+        return this;
+    }
+
+
+    // welcoming window
+    method void drawText() {
+
+        do Output.moveCursor(4, 18); 
+        do Output.printString("Welcome to Noam and Asaf Game");
+
+        do Output.moveCursor(8, 20);
+        do Output.printString("Watch out from Asteroids");
+
+        do Output.moveCursor(12, 20);
+        do Output.printString("Achieve 360 POINTS TO WIN");
+    
+        do Output.moveCursor(16, 21);
+        do Output.printString("Press Enter to continue");
+
+        return;
+    }
+
+    // instructions window
+    method void letsGo() {
+
+        do Output.moveCursor(6, 15); 
+        do Output.printString("You can go up,down,right and left");
+
+        do Output.moveCursor(10, 26);
+        do Output.printString("LETS GOOOOO!");
+
+        do Output.moveCursor(14, 20);
+        do Output.printString("Press Enter to start game");
+
+        return;
+    }
+
+    // going to the next level
+    method void nextLevel(int level) {
+
+        do Output.moveCursor(8, 16); 
+        do Output.printString("WELL DONE! GOING TO LEVEL "); 
+        do Output.printInt(level);
+   
+        do Output.moveCursor(12, 18);
+        do Output.printString("Press space to continue");
+
+        return;
+    }
+
+    // method for clearing the screen
+    method void clearScreen() {
+        var int memAddress;
+        var int i, j;
+        
+        // Start from the beginning of the screen memory
+        let memAddress = 16384;  // Starting memory address for the screen
+
+        // Initialize row counter (i) for the 256 rows
+        let i = 0;
+
+        // Loop through all rows (256 rows)
+        while (i < 256) {
+            // Initialize column counter (j) for the 512 columns
+            let j = 0;
+            
+            // Loop through all columns (512 columns per row)
+            while (j < 512) {
+                do Memory.poke(memAddress + (i * 512) + j, 0);  // Write 0 (white pixel)
+                let j = j + 1;  // Move to the next column
+            }
+
+            let i = i + 1;  // Move to the next row
+        }
+        return;
+    }
+
+    // winning window
+    method void lastScreen() {
+
+        do Output.moveCursor(8, 18); 
+        do Output.printString("CONGRATULATIONS! YOU WON!"); 
+
+        do Output.moveCursor(12, 28);
+        do Output.printString("GAME OVER!");
+
+        do Output.moveCursor(16, 21);
+        do Output.printString("Press space to continue");
+
+        return;
+    }
+
+    // losing window
+    method void lostScreen() {
+
+         do Output.moveCursor(8, 17); 
+         do Output.printString("HAHAHAHAHA! YOU ARE A LOSER!"); 
+
+         do Output.moveCursor(12, 26);
+         do Output.printString("GAME OVER!");
+
+         do Output.moveCursor(16, 19);
+         do Output.printString("Press space to continue");
+
+         return;
+    }
+
+    // score display
+     method void displayScore(int score) {
+        
+        do Output.moveCursor(1, 1); 
+        do Output.printString("score: ");
+        do Output.printInt(score);  
+
+        return;
+    }
+
+    // playAgain window
+    method void playAgain(){
+
+        do Output.moveCursor(6, 20); 
+        do Output.printString("You finished the game!");
+
+        do Output.moveCursor(10, 22);
+        do Output.printString("Want to play again?");
+
+        do Output.moveCursor(14, 18);
+        do Output.printString("Press p to start a new game");
+
+        return;
+    }
+
+}

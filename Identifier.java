@@ -1,8 +1,8 @@
 
 public class Identifier {
     
-    private static String name; 
-    private static String type; 
+    public String name; 
+    public String type; 
     public  String kind; 
     public  int runningIndex;
     
@@ -13,13 +13,6 @@ public class Identifier {
         this.kind = kind;
         this.runningIndex = runningIndex;
         
-    }
-
-    public static String getName() {
-        return name;
-    }
-    public static String getType() {
-        return type;
     }
    
     @Override

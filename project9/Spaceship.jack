@@ -1,0 +1,225 @@
+class Spaceship{
+
+    field int direction;
+    field int x, y;       // Top-left corner of the spaceship
+    field Array bullets;
+    field int bulletCount;   
+    field boolean lastKeyState;
+    
+    constructor Spaceship new(int startX, int startY) {
+        // Set starting position
+        let x = startX;
+        let y = startY;
+        let bullets = Array.new(100); // Fixed-size array for up to 10 bullets
+        let bulletCount = 0; // Initially, no bullet
+        let direction = 0 ;
+        let lastKeyState = false;
+        // Set fixed size for the spaceship
+        return this;
+    }
+
+    
+
+    // drawing the spaceship
+    method void draw(int w ,int h ) {
+	var int memAddress; 
+	let memAddress = 16384 + (h*32) + w;
+	// column 0
+	do Memory.poke(memAddress, 512);
+	do Memory.poke(memAddress +32, 512);
+	do Memory.poke(memAddress +64, 3968);
+	do Memory.poke(memAddress +96, 2176);
+	do Memory.poke(memAddress +128, 30960);
+	do Memory.poke(memAddress +160, 16400);
+	do Memory.poke(memAddress +192, 16400);
+	do Memory.poke(memAddress +224, 18192);
+	do Memory.poke(memAddress +256, 18192);
+	do Memory.poke(memAddress +288, 32752);
+	do Memory.poke(memAddress +320, 32752);
+	do Memory.poke(memAddress +352, 32754);
+	do Memory.poke(memAddress +384, 32754);
+	do Memory.poke(memAddress +416, 32759);
+	do Memory.poke(memAddress +448, 32759);
+	do Memory.poke(memAddress +480, -1281);
+	do Memory.poke(memAddress +512, -1281);
+	do Memory.poke(memAddress +544, -7617);
+	do Memory.poke(memAddress +576, -8129);
+	// column 1
+	do Memory.poke(memAddress +353, 2);
+	do Memory.poke(memAddress +385, 2);
+	do Memory.poke(memAddress +417, 7);
+	do Memory.poke(memAddress +449, 7);
+	do Memory.poke(memAddress +481, 7);
+	do Memory.poke(memAddress +513, 7);
+	do Memory.poke(memAddress +545, 7);
+	do Memory.poke(memAddress +577, 7);
+	return;
+}
+
+
+    // erasing the spaceship
+    method void erase(int w ,int h ) {
+    var int memAddress; 
+    let memAddress = 16384 + (h * 32) + w;
+    // column 0
+    do Memory.poke(memAddress, 0);
+    do Memory.poke(memAddress + 32, 0);
+    do Memory.poke(memAddress + 64, 0);
+    do Memory.poke(memAddress + 96, 0);
+    do Memory.poke(memAddress + 128, 0);
+    do Memory.poke(memAddress + 160, 0);
+    do Memory.poke(memAddress + 192, 0);
+    do Memory.poke(memAddress + 224, 0);
+    do Memory.poke(memAddress + 256, 0);
+    do Memory.poke(memAddress + 288, 0);
+    do Memory.poke(memAddress + 320, 0);
+    do Memory.poke(memAddress + 352, 0);
+    do Memory.poke(memAddress + 384, 0);
+    do Memory.poke(memAddress + 416, 0);
+    do Memory.poke(memAddress + 448, 0);
+    do Memory.poke(memAddress + 480, 0);
+    do Memory.poke(memAddress + 512, 0);
+    do Memory.poke(memAddress + 544, 0);
+    do Memory.poke(memAddress + 576, 0);
+    // column 1
+    do Memory.poke(memAddress + 353, 0);
+    do Memory.poke(memAddress + 385, 0);
+    do Memory.poke(memAddress + 417, 0);
+    do Memory.poke(memAddress + 449, 0);
+    do Memory.poke(memAddress + 481, 0);
+    do Memory.poke(memAddress + 513, 0);
+    do Memory.poke(memAddress + 545, 0);
+    do Memory.poke(memAddress + 577, 0);
+    return;
+}
+
+    // moving the spaceship
+    method void moveSpaceShip(int key){
+        if(key = 132) {
+            do moveRight();
+        }
+        if(key = 130){
+            do moveLeft();
+        }
+        if(key = 131){
+            do moveUp();
+        }
+        if(key = 133){
+            do moveDown();
+        }
+        return;
+    }
+
+    // moving the spaceship left
+    method void moveLeft() {
+        if (x > 0) { 
+            do erase(x,y); 
+            let x = x -1 ;
+            do draw(x,y); 
+        }
+        return;
+    }
+
+    // moving the spaceship right
+    method void moveRight() {
+        if (x < 30) { 
+            do erase(x,y); 
+            let x = x + 1;
+            do draw(x,y); 
+        }
+        return;
+    }
+
+    // moving the spaceship up
+    method void moveUp() {
+        if (y > 3) { 
+            do erase(x,y); 
+            let y = y - 3;
+            do draw(x,y); 
+        }
+        return;
+    }
+
+    // moving the spaceship down 
+    method void moveDown() {
+        if (y < 231) { 
+            do erase(x,y); 
+            let y = y + 3;
+            do draw(x,y); 
+        }
+        return;
+    }
+
+    // spaceship shooting
+    method void shoot(int key) {
+        var Projectile bullet;
+        if (key = 32){ 
+            if (~lastKeyState) { 
+                let bullet = Projectile.new(x , y - 3); 
+                let bullets[bulletCount] = bullet; 
+                let bulletCount = bulletCount + 1; 
+                do bullet.moveUp();
+                let lastKeyState = true;                
+            }  
+        }else {
+            let lastKeyState = false; // Reset when key is released
+            }
+        return;   
+    }
+
+    // checking the hits ( asteroids, aliens, spaceship ) and updating the bullets 
+    method void updateBullets(AlienManager alienManager, Asteroid asteroidManager) {
+    var int i;
+    var Projectile currBullet;
+
+    let i = 0;
+    while (i < bulletCount) {
+        let currBullet = bullets[i];
+        if (~(currBullet = null)) {
+            do currBullet.moveUp(); 
+
+            do alienManager.checkHit(currBullet.getX(), currBullet.getY());
+            do asteroidManager.checkHit(currBullet.getX() , currBullet.getY());
+            
+            if (currBullet.isOffScreen()) { 
+                do currBullet.erase(currBullet.getX(), currBullet.getY());
+                do Memory.deAlloc(currBullet);
+
+                let bullets[i] = bullets[bulletCount - 1];
+                let bullets[bulletCount - 1] = null;
+                let bulletCount = bulletCount - 1;
+                let i = i - 1; 
+            }
+        }
+        let i = i + 1;
+    }
+        return;
+}
+
+    method void setDirection(int arg){
+       let direction = arg;
+        return;
+    }
+
+    method int getY(){
+        return y;
+    }
+
+    method int getX(){
+        return x;
+    }
+
+    method int getBulletCount() {
+    return bulletCount;
+}
+    method Array getBullets() {
+    return bullets;
+}
+
+    // Check if the spaceship coordinates overlap with the asteroid
+    method boolean isHit(int randomnum) {
+    return 	((randomnum > (x - 3)) & (randomnum < (x + 3)));
+    }
+
+
+}

@@ -87,7 +87,6 @@ public class SymbolTable {
             return methodLevelMap.get(name).kind;    
         }
         else if ( classLevelMap.containsKey(name) ) {
-            System.out.println(classLevelMap.get(name).kind);
             return classLevelMap.get(name).kind.toUpperCase();    
         } 
 
@@ -97,10 +96,10 @@ public class SymbolTable {
    
     public String typeOf(String name) {
         if ( methodLevelMap.containsKey(name) ) {
-            return methodLevelMap.get(name).getType();    
+            return methodLevelMap.get(name).type;    
         }
         else if ( classLevelMap.containsKey(name) ) {
-            return classLevelMap.get(name).getType();    
+            return classLevelMap.get(name).type;    
         } 
 
         return Kind.NONE.toString();
@@ -121,7 +120,7 @@ public class SymbolTable {
         for (String key : classLevelMap.keySet()) {
             Identifier identifier = classLevelMap.get(key);
             System.out.println("Name: " + key +
-                    ", Type: " + identifier.getType() +
+                    ", Type: " + identifier.type +
                     ", Kind: " + identifier.kind +
                     ", Index: " + identifier.runningIndex);
         } 
@@ -130,7 +129,7 @@ public class SymbolTable {
         for (String key : methodLevelMap.keySet()) {
             Identifier identifier = methodLevelMap.get(key);
             System.out.println("Name: " + key +
-                    ", Type: " + identifier.getType() +
+                    ", Type: " + identifier.type +
                     ", Kind: " + identifier.kind +
                     ", Index: " + identifier.runningIndex);
         }
@@ -141,8 +140,8 @@ public class SymbolTable {
     for (Map.Entry<String, Identifier> entry : classLevelMap.entrySet()) {
         Identifier identifier = entry.getValue();
         if (identifier.kind.equals(Kind.THIS.toString())) {
-            System.out.println("Name: " + identifier.getName() +
-                               ", Type: " + identifier.getType() +
+            System.out.println("Name: " + identifier.name +
+                               ", Type: " + identifier.type +
                                ", Kind: " + identifier.kind +
                                ", Index: " + identifier.runningIndex);
         }

@@ -1,0 +1,608 @@
+function Spaceship.new 0
+    push constant 6
+    call Memory.alloc 1
+    pop pointer 0
+    push argument 0
+    pop this 1
+    push argument 1
+    pop this 2
+    push constant 100
+    call Array.new 1
+    pop this 3
+    push constant 0
+    pop this 4
+    push constant 0
+    pop this 0
+    push constant 0
+    pop this 5
+    push pointer 0
+    return
+function Spaceship.draw 1
+    push argument 0
+    pop pointer 0
+    push constant 16384
+    push argument 2
+    push constant 32
+    call Math.multiply 2
+    add
+    push argument 1
+    add
+    pop local 0
+    push local 0
+    push constant 512
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 32
+    add
+    push constant 512
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 64
+    add
+    push constant 3968
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 96
+    add
+    push constant 2176
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 128
+    add
+    push constant 30960
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 160
+    add
+    push constant 16400
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 192
+    add
+    push constant 16400
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 224
+    add
+    push constant 18192
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 256
+    add
+    push constant 18192
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 288
+    add
+    push constant 32752
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 320
+    add
+    push constant 32752
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 352
+    add
+    push constant 32754
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 384
+    add
+    push constant 32754
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 416
+    add
+    push constant 32759
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 448
+    add
+    push constant 32759
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 480
+    add
+    push constant 1281
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 512
+    add
+    push constant 1281
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 544
+    add
+    push constant 7617
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 576
+    add
+    push constant 8129
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 353
+    add
+    push constant 2
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 385
+    add
+    push constant 2
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 417
+    add
+    push constant 7
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 449
+    add
+    push constant 7
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 481
+    add
+    push constant 7
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 513
+    add
+    push constant 7
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 545
+    add
+    push constant 7
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 577
+    add
+    push constant 7
+    call Memory.poke 2
+    pop temp 0
+    push constant 0
+    return
+function Spaceship.erase 1
+    push argument 0
+    pop pointer 0
+    push constant 16384
+    push argument 2
+    push constant 32
+    call Math.multiply 2
+    add
+    push argument 1
+    add
+    pop local 0
+    push local 0
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 32
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 64
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 96
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 128
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 160
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 192
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 224
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 256
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 288
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 320
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 352
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 384
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 416
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 448
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 480
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 512
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 544
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 576
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 353
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 385
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 417
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 449
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 481
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 513
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 545
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 577
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push constant 0
+    return
+function Spaceship.moveSpaceShip 0
+    push argument 0
+    pop pointer 0
+    push argument 1
+    push constant 132
+    eq
+    not
+    if-goto Spaceship_1
+    push pointer 0
+    call Spaceship.moveRight 1
+    pop temp 0
+    goto Spaceship_0
+label Spaceship_1
+label Spaceship_0
+    push argument 1
+    push constant 130
+    eq
+    not
+    if-goto Spaceship_3
+    push pointer 0
+    call Spaceship.moveLeft 1
+    pop temp 0
+    goto Spaceship_2
+label Spaceship_3
+label Spaceship_2
+    push argument 1
+    push constant 131
+    eq
+    not
+    if-goto Spaceship_5
+    push pointer 0
+    call Spaceship.moveUp 1
+    pop temp 0
+    goto Spaceship_4
+label Spaceship_5
+label Spaceship_4
+    push argument 1
+    push constant 133
+    eq
+    not
+    if-goto Spaceship_7
+    push pointer 0
+    call Spaceship.moveDown 1
+    pop temp 0
+    goto Spaceship_6
+label Spaceship_7
+label Spaceship_6
+    push constant 0
+    return
+function Spaceship.moveLeft 0
+    push argument 0
+    pop pointer 0
+    push this 1
+    push constant 0
+    gt
+    not
+    if-goto Spaceship_9
+    push pointer 0
+    push this 1
+    push this 2
+    call Spaceship.erase 3
+    pop temp 0
+    push this 1
+    push constant 1
+    sub
+    pop this 1
+    push pointer 0
+    push this 1
+    push this 2
+    call Spaceship.draw 3
+    pop temp 0
+    goto Spaceship_8
+label Spaceship_9
+label Spaceship_8
+    push constant 0
+    return
+function Spaceship.moveRight 0
+    push argument 0
+    pop pointer 0
+    push this 1
+    push constant 30
+    lt
+    not
+    if-goto Spaceship_11
+    push pointer 0
+    push this 1
+    push this 2
+    call Spaceship.erase 3
+    pop temp 0
+    push this 1
+    push constant 1
+    add
+    pop this 1
+    push pointer 0
+    push this 1
+    push this 2
+    call Spaceship.draw 3
+    pop temp 0
+    goto Spaceship_10
+label Spaceship_11
+label Spaceship_10
+    push constant 0
+    return
+function Spaceship.moveUp 0
+    push argument 0
+    pop pointer 0
+    push this 2
+    push constant 3
+    gt
+    not
+    if-goto Spaceship_13
+    push pointer 0
+    push this 1
+    push this 2
+    call Spaceship.erase 3
+    pop temp 0
+    push this 2
+    push constant 3
+    sub
+    pop this 2
+    push pointer 0
+    push this 1
+    push this 2
+    call Spaceship.draw 3
+    pop temp 0
+    goto Spaceship_12
+label Spaceship_13
+label Spaceship_12
+    push constant 0
+    return
+function Spaceship.moveDown 0
+    push argument 0
+    pop pointer 0
+    push this 2
+    push constant 231
+    lt
+    not
+    if-goto Spaceship_15
+    push pointer 0
+    push this 1
+    push this 2
+    call Spaceship.erase 3
+    pop temp 0
+    push this 2
+    push constant 3
+    add
+    pop this 2
+    push pointer 0
+    push this 1
+    push this 2
+    call Spaceship.draw 3
+    pop temp 0
+    goto Spaceship_14
+label Spaceship_15
+label Spaceship_14
+    push constant 0
+    return
+function Spaceship.shoot 1
+    push argument 0
+    pop pointer 0
+    push argument 1
+    push constant 32
+    eq
+    not
+    if-goto Spaceship_17
+    push this 5
+    not
+    not
+    if-goto Spaceship_19
+    push this 1
+    push this 2
+    push constant 3
+    sub
+    call Projectile.new 2
+    pop local 0
+    push this 4
+    push this 3
+    add
+    push local 0
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push this 4
+    push constant 1
+    add
+    pop this 4
+    push local 0
+    call Projectile.moveUp 1
+    pop temp 0
+    push constant 1
+    neg
+    pop this 5
+    goto Spaceship_18
+label Spaceship_19
+label Spaceship_18
+    goto Spaceship_16
+label Spaceship_17
+    push constant 0
+    pop this 5
+label Spaceship_16
+    push constant 0
+    return
+function Spaceship.updateBullets 2
+    push argument 0
+    pop pointer 0
+    push constant 0
+    pop local 0
+label Spaceship_20
+    push local 0
+    push this 4
+    lt
+    not
+    if-goto Spaceship_21
+    push local 0
+    push this 3
+    add
+    pop pointer 1
+    push that 0
+    pop local 1
+    push local 1
+    push constant 0
+    eq
+    not
+    not
+    if-goto Spaceship_23
+    push local 1
+    call Projectile.moveUp 1
+    pop temp 0
+    push argument 1
+    push this 1
+    call AlienManager.checkHitProjectile.getX 2
+    call  3
+    pop temp 0
+    goto Spaceship_22
+label Spaceship_23
+label Spaceship_22
+    goto Spaceship_20
+label Spaceship_21

@@ -1,0 +1,275 @@
+function Main.main 31
+    call Graphics.new 0
+    pop local 24
+    push local 24
+    call Graphics.drawText 1
+    pop temp 0
+label Main_0
+    call Keyboard.keyPressed 0
+    push constant 128
+    eq
+    not
+    not
+    if-goto Main_1
+    push constant 10
+    call Sys.wait 1
+    pop temp 0
+    goto Main_0
+label Main_1
+    push local 24
+    call Graphics.clearScreen 1
+    pop temp 0
+    push local 24
+    call Graphics.letsGo 1
+    pop temp 0
+label Main_2
+    call Keyboard.keyPressed 0
+    push constant 128
+    eq
+    not
+    not
+    if-goto Main_3
+    push constant 10
+    call Sys.wait 1
+    pop temp 0
+    goto Main_2
+label Main_3
+    push local 24
+    call Graphics.clearScreen 1
+    pop temp 0
+    push constant 1
+    neg
+    pop local 22
+    push constant 1
+    pop local 23
+label Main_4
+    push constant 1
+    neg
+    not
+    if-goto Main_5
+    push constant 0
+    pop local 19
+    push constant 1
+    neg
+    pop local 22
+    push constant 1
+    pop local 23
+label Main_6
+    push local 22
+    not
+    if-goto Main_7
+    push local 19
+    pop local 20
+    push constant 14
+    push constant 230
+    call Spaceship.new 2
+    pop local 0
+    push constant 100
+    push constant 256
+    push constant 240
+    call AlienManager.new 3
+    pop local 1
+    call Asteroid.new 0
+    pop local 25
+    push constant 13
+    push local 23
+    call Math.multiply 2
+    call Random.new 1
+    pop local 29
+    push constant 1
+    pop local 5
+    push constant 0
+    pop local 17
+    push constant 0
+    pop local 18
+    push constant 1
+    neg
+    pop local 11
+    push constant 0
+    pop local 12
+    push constant 0
+    pop local 13
+    push constant 0
+    pop local 10
+    push constant 0
+    pop local 15
+    push constant 0
+    pop local 14
+    push constant 0
+    pop local 16
+    push constant 0
+    pop local 4
+    push constant 0
+    pop local 27
+    push constant 0
+    pop local 28
+    push constant 0
+    pop local 30
+    push local 0
+    push constant 10
+    push constant 400
+    call Spaceship.draw 3
+    pop temp 0
+    push local 0
+    call Spaceship.moveRight 1
+    pop temp 0
+    push local 1
+    push constant 3
+    push constant 10
+    call AlienManager.addAlien 3
+    pop temp 0
+    push local 1
+    push constant 6
+    push constant 10
+    call AlienManager.addAlien 3
+    pop temp 0
+    push local 1
+    push constant 9
+    push constant 10
+    call AlienManager.addAlien 3
+    pop temp 0
+    push local 1
+    push constant 12
+    push constant 10
+    call AlienManager.addAlien 3
+    pop temp 0
+    push local 1
+    push constant 15
+    push constant 10
+    call AlienManager.addAlien 3
+    pop temp 0
+    push local 1
+    push constant 18
+    push constant 10
+    call AlienManager.addAlien 3
+    pop temp 0
+    push local 1
+    push constant 21
+    push constant 10
+    call AlienManager.addAlien 3
+    pop temp 0
+    push local 1
+    push constant 24
+    push constant 10
+    call AlienManager.addAlien 3
+    pop temp 0
+    push local 1
+    push constant 27
+    push constant 10
+    call AlienManager.addAlien 3
+    pop temp 0
+    push local 1
+    call AlienManager.drawAll 1
+    pop temp 0
+label Main_8
+    push local 27
+    push local 23
+    push constant 2
+    call Math.multiply 2
+    lt
+    not
+    if-goto Main_9
+    push constant 1
+    push constant 30
+    push this 29
+    call Random.generateRandom 3
+    pop local 30
+label Main_10
+    push local 30
+    push this 0
+    call Spaceship.isHit 2
+    not
+    if-goto Main_11
+    push constant 1
+    push constant 30
+    push this 29
+    call Random.generateRandom 3
+    pop local 30
+    goto Main_10
+label Main_11
+    push local 28
+    not
+    if-goto Main_13
+    push local 25
+    push local 30
+    push constant 240
+    push constant 1
+    neg
+    call Asteroid.addAsteroid 4
+    pop temp 0
+    push constant 0
+    pop local 28
+    goto Main_12
+label Main_13
+    push local 25
+    push local 30
+    push constant 3
+    push constant 0
+    call Asteroid.addAsteroid 4
+    pop temp 0
+    push constant 1
+    neg
+    pop local 28
+label Main_12
+    push local 27
+    push constant 1
+    add
+    pop local 27
+    goto Main_8
+label Main_9
+    push local 25
+    call Asteroid.drawAll 1
+    pop temp 0
+    push constant 0
+    pop local 17
+    push constant 0
+    pop local 18
+label Main_14
+    push local 11
+    not
+    if-goto Main_15
+    push local 10
+    push constant 100
+    add
+    pop local 10
+    push local 10
+    push constant 200
+    gt
+    not
+    if-goto Main_17
+    push local 1
+    push local 23
+    call AlienManager.alienGoDown 2
+    pop temp 0
+    push constant 0
+    pop local 10
+    goto Main_16
+label Main_17
+label Main_16
+    push local 0
+    call Spaceship.moveSpaceShipKeyboard.keyPressed 1
+    call  2
+    pop temp 0
+    push local 0
+    call Spaceship.shootKeyboard.keyPressed 1
+    call  2
+    pop temp 0
+    push local 0
+    push local 1
+    push local 25
+    call Spaceship.updateBullets 3
+    pop temp 0
+    push this 0
+    call Asteroid.checkCollisionSpaceship.getX 1
+    call  2
+    not
+    if-goto Main_19
+    goto Main_18
+label Main_19
+label Main_18
+    goto Main_14
+label Main_15
+    goto Main_6
+label Main_7
+    goto Main_4
+label Main_5

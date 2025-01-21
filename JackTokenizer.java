@@ -40,7 +40,7 @@ public class JackTokenizer {
         HashSet<String> dividersSet = new HashSet<>(Arrays.asList(dividers));
     
         while (hasMorelines()) {
-            if (currLine.trim().startsWith("//")) {
+            if (currLine != null && currLine.trim().startsWith("//")) {
                 advanceline(); // Skip comment-only lines
                 continue;
             }
@@ -52,14 +52,15 @@ public class JackTokenizer {
                 } else {
                     while (endOfCommentPhrase == -1) {
                         advanceline(); // Skip comment-only lines
+                      
                         endOfCommentPhrase = currLine.indexOf("*/");
                     }
                     advanceline(); // Skip comment-only lines
                 }
                 continue;
             }
-    
             int commentIndex = currLine.indexOf("//");
+            
             if (commentIndex != -1) {
                 currLine = currLine.substring(0, commentIndex).trim(); // Remove inline comments
             }

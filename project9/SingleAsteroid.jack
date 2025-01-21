@@ -1,0 +1,137 @@
+class SingleAsteroid {
+
+    field int x, y;
+    field boolean moveUp; // Direction of movement
+    field boolean isAlive;
+
+    constructor SingleAsteroid new(int startX, int startY, boolean moveUpDirection) {
+        let x = startX;
+        let y = startY;
+        let moveUp = moveUpDirection;
+        let isAlive = true; // Initialize as alive
+        return this;
+    }
+
+	// Asteroid draw
+    method void draw(int w, int h) {
+		var int memAddress; 
+		let memAddress = 16384+ (h*32) + w ;
+		// column 0
+		do Memory.poke(memAddress, 7);
+		do Memory.poke(memAddress +32, -4089);
+		do Memory.poke(memAddress +64, -4089);
+		do Memory.poke(memAddress +96, -8185);
+		do Memory.poke(memAddress +128, -1);
+		do Memory.poke(memAddress +160, -1);
+		do Memory.poke(memAddress +192, -2);
+		do Memory.poke(memAddress +224, 32764);
+		do Memory.poke(memAddress +256, 16382);
+		do Memory.poke(memAddress +288, -16386);
+		do Memory.poke(memAddress +320, 32766);
+		do Memory.poke(memAddress +352, -1);
+		do Memory.poke(memAddress +384, -18);
+		do Memory.poke(memAddress +416, -17);
+		do Memory.poke(memAddress +448, -17);
+		do Memory.poke(memAddress +480, -2048);
+		do Memory.poke(memAddress +512, -1024);
+		do Memory.poke(memAddress +544, -1024);
+		do Memory.poke(memAddress +576, -2048);
+		// column 1
+		do Memory.poke(memAddress +33, 7);
+		do Memory.poke(memAddress +65, 7);
+		do Memory.poke(memAddress +97, 7);
+		do Memory.poke(memAddress +129, 7);
+		do Memory.poke(memAddress +161, 1);
+		do Memory.poke(memAddress +193, 1);
+		do Memory.poke(memAddress +353, 1);
+		do Memory.poke(memAddress +417, 1);
+		do Memory.poke(memAddress +449, 1);
+		do Memory.poke(memAddress +513, 3);
+		do Memory.poke(memAddress +545, 3);
+		do Memory.poke(memAddress +577, 3);
+		return;
+    }
+
+	// Asteroid erase
+    method void erase(int w, int h) {
+		var int memAddress; 
+		let memAddress = 16384 + (h*32) + w ;
+		// column 0
+		do Memory.poke(memAddress, 0);
+		do Memory.poke(memAddress +32, 0);
+		do Memory.poke(memAddress +64, 0);
+		do Memory.poke(memAddress +96, 0);
+		do Memory.poke(memAddress +128, 0);
+		do Memory.poke(memAddress +160, 0);
+		do Memory.poke(memAddress +192, 0);
+		do Memory.poke(memAddress +224, 0);
+		do Memory.poke(memAddress +256, 0);
+		do Memory.poke(memAddress +288, 0);
+		do Memory.poke(memAddress +320, 0);
+		do Memory.poke(memAddress +352, 0);
+		do Memory.poke(memAddress +384, 0);
+		do Memory.poke(memAddress +416, 0);
+		do Memory.poke(memAddress +448, 0);
+		do Memory.poke(memAddress +480, 0);
+		do Memory.poke(memAddress +512, 0);
+		do Memory.poke(memAddress +544, 0);
+		do Memory.poke(memAddress +576, 0);
+		// column 1
+		do Memory.poke(memAddress +33, 0);
+		do Memory.poke(memAddress +65, 0);
+		do Memory.poke(memAddress +97, 0);
+		do Memory.poke(memAddress +129, 0);
+		do Memory.poke(memAddress +161, 0);
+		do Memory.poke(memAddress +193, 0);
+		do Memory.poke(memAddress +353, 0);
+		do Memory.poke(memAddress +417, 0);
+		do Memory.poke(memAddress +449, 0);
+		do Memory.poke(memAddress +513, 0);
+		do Memory.poke(memAddress +545, 0);
+		do Memory.poke(memAddress +577, 0);
+		return;
+    }
+
+	// Check if the spaceship coordinates overlap with the asteroid
+    method boolean isHit(int shipX, int shipY) {
+
+    	return 	((shipX > (x - 3)) & (shipX < (x + 2))) &
+				((shipY > (y - 3)) & (shipY < (y + 3)));
+    }
+
+	// Mark the asteroid as destroyed
+    method void destroy() {
+        let isAlive = false; 
+        return;
+    }
+    method int getX() {
+        return x;
+    }
+    method int getY() {
+        return y;
+    }
+    method void setX(int newX) {
+        let x = newX;
+        return;
+    }
+    method void setY(int newY) {
+        let y = newY;
+        return;
+    }
+    method boolean getMoveUp() {
+        return moveUp;
+    }
+    method boolean getIsAlive() {
+        return isAlive;
+    }
+	
+	// checking if the Asteroid is on the screen 
+	method boolean isAsteroidOffScreen(){
+	 	if (moveUp){
+			return ( y = 2 ) | ( y < 2 );
+		}
+		else {
+			return ( y = 240 ) | ( y > 240 );
+		}
+    }
+}

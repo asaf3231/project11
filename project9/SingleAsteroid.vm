@@ -1,0 +1,517 @@
+function SingleAsteroid.new 0
+    push constant 4
+    call Memory.alloc 1
+    pop pointer 0
+    push argument 0
+    pop this 0
+    push argument 1
+    pop this 1
+    push argument 2
+    pop this 2
+    push constant 1
+    neg
+    pop this 3
+    push pointer 0
+    return
+function SingleAsteroid.draw 1
+    push argument 0
+    pop pointer 0
+    push constant 16384
+    push argument 2
+    push constant 32
+    call Math.multiply 2
+    add
+    push argument 1
+    add
+    pop local 0
+    push local 0
+    push constant 7
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 32
+    add
+    push constant 4089
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 64
+    add
+    push constant 4089
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 96
+    add
+    push constant 8185
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 128
+    add
+    push constant 1
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 160
+    add
+    push constant 1
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 192
+    add
+    push constant 2
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 224
+    add
+    push constant 32764
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 256
+    add
+    push constant 16382
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 288
+    add
+    push constant 16386
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 320
+    add
+    push constant 32766
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 352
+    add
+    push constant 1
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 384
+    add
+    push constant 18
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 416
+    add
+    push constant 17
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 448
+    add
+    push constant 17
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 480
+    add
+    push constant 2048
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 512
+    add
+    push constant 1024
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 544
+    add
+    push constant 1024
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 576
+    add
+    push constant 2048
+    neg
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 33
+    add
+    push constant 7
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 65
+    add
+    push constant 7
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 97
+    add
+    push constant 7
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 129
+    add
+    push constant 7
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 161
+    add
+    push constant 1
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 193
+    add
+    push constant 1
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 353
+    add
+    push constant 1
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 417
+    add
+    push constant 1
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 449
+    add
+    push constant 1
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 513
+    add
+    push constant 3
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 545
+    add
+    push constant 3
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 577
+    add
+    push constant 3
+    call Memory.poke 2
+    pop temp 0
+    push constant 0
+    return
+function SingleAsteroid.erase 1
+    push argument 0
+    pop pointer 0
+    push constant 16384
+    push argument 2
+    push constant 32
+    call Math.multiply 2
+    add
+    push argument 1
+    add
+    pop local 0
+    push local 0
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 32
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 64
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 96
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 128
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 160
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 192
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 224
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 256
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 288
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 320
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 352
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 384
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 416
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 448
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 480
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 512
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 544
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 576
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 33
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 65
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 97
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 129
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 161
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 193
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 353
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 417
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 449
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 513
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 545
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push local 0
+    push constant 577
+    add
+    push constant 0
+    call Memory.poke 2
+    pop temp 0
+    push constant 0
+    return
+function SingleAsteroid.isHit 0
+    push argument 0
+    pop pointer 0
+    push argument 1
+    push this 0
+    push constant 3
+    sub
+    gt
+    push argument 1
+    push this 0
+    push constant 2
+    add
+    lt
+    and
+    push argument 2
+    push this 1
+    push constant 3
+    sub
+    gt
+    push argument 2
+    push this 1
+    push constant 3
+    add
+    lt
+    and
+    and
+    return
+function SingleAsteroid.destroy 0
+    push argument 0
+    pop pointer 0
+    push constant 0
+    pop this 3
+    push constant 0
+    return
+function SingleAsteroid.getX 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    return
+function SingleAsteroid.getY 0
+    push argument 0
+    pop pointer 0
+    push this 1
+    return
+function SingleAsteroid.setX 0
+    push argument 0
+    pop pointer 0
+    push argument 1
+    pop this 0
+    push constant 0
+    return
+function SingleAsteroid.setY 0
+    push argument 0
+    pop pointer 0
+    push argument 1
+    pop this 1
+    push constant 0
+    return
+function SingleAsteroid.getMoveUp 0
+    push argument 0
+    pop pointer 0
+    push this 2
+    return
+function SingleAsteroid.getIsAlive 0
+    push argument 0
+    pop pointer 0
+    push this 3
+    return
+function SingleAsteroid.isAsteroidOffScreen 0
+    push argument 0
+    pop pointer 0
+    push this 2
+    not
+    if-goto SingleAsteroid_1
+    push this 1
+    push constant 2
+    eq
+    push this 1
+    push constant 2
+    lt
+    or
+    return
+    goto SingleAsteroid_0
+label SingleAsteroid_1
+    push this 1
+    push constant 240
+    eq
+    push this 1
+    push constant 240
+    gt
+    or
+    return
+label SingleAsteroid_0

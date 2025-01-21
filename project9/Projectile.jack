@@ -1,0 +1,59 @@
+class Projectile {
+
+    field int x, y;
+
+    constructor Projectile new(int startX, int startY) {
+        let x = startX;
+        let y = startY;
+        return this;
+    }
+
+    // method that makes the bullet go up
+    method void moveUp(){
+        do erase(x,y);
+        let y = y-2 ;
+
+        if (y > 10) {
+            do draw(x, y);
+        }
+        return;
+    }
+
+    // the bullet drawing
+    method void draw(int w, int h) {
+        var int memAddress; 
+        let memAddress = 16384 + w + (h * 32);
+        // column 0
+        do Memory.poke(memAddress, 6);
+        do Memory.poke(memAddress +32, 15);
+        do Memory.poke(memAddress +64, 9);
+        do Memory.poke(memAddress +96, 9);
+        return;
+    }
+
+    // the bullet erasing
+    method void erase(int w, int h) {
+        var int memAddress; 
+        let memAddress = 16384 + w + (h * 32);
+        // column 0
+        do Memory.poke(memAddress, 0);
+        do Memory.poke(memAddress +32, 0);
+        do Memory.poke(memAddress +64, 0);
+        do Memory.poke(memAddress +96, 0);
+        return;
+    }
+
+    // checking if the bullet is still on the screen
+    method boolean isOffScreen(){
+        return ( y = 2 ) | ( y < 2 );
+    }
+
+    method int getY(){
+        return y;
+    }
+    
+    method int getX(){
+        return x;
+    }
+    
+}
