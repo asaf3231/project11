@@ -17,6 +17,7 @@ public class JackTokenizer {
     private static ArrayList<String> tokens ;
     public static int counter;
     private static HashMap<String,String> map ; 
+    private static int counterhasMoreLines;
 
     public JackTokenizer(File file) throws IOException {
         reader = new BufferedReader(new FileReader(file));
@@ -25,6 +26,7 @@ public class JackTokenizer {
         tokens =  new ArrayList<>();
         map = new HashMap<>();
         counter = 0;
+        counterhasMoreLines = 1 ;
         buildMap();
         cleanFile();
     }
@@ -38,9 +40,10 @@ public class JackTokenizer {
         };
     
         HashSet<String> dividersSet = new HashSet<>(Arrays.asList(dividers));
-    
+
         while (hasMorelines()) {
-            if (currLine != null && currLine.trim().startsWith("//")) {
+
+            if (currLine.trim().startsWith("//")) {
                 advanceline(); // Skip comment-only lines
                 continue;
             }
@@ -52,15 +55,14 @@ public class JackTokenizer {
                 } else {
                     while (endOfCommentPhrase == -1) {
                         advanceline(); // Skip comment-only lines
-                      
                         endOfCommentPhrase = currLine.indexOf("*/");
                     }
                     advanceline(); // Skip comment-only lines
                 }
                 continue;
             }
+    
             int commentIndex = currLine.indexOf("//");
-            
             if (commentIndex != -1) {
                 currLine = currLine.substring(0, commentIndex).trim(); // Remove inline comments
             }
@@ -163,7 +165,13 @@ public class JackTokenizer {
     }
 
     public static boolean hasMorelines() throws IOException{
-        while(nextLine != null && (nextLine.trim().isEmpty() || nextLine.startsWith("//"))){
+        System.out.println(currLine);
+        System.out.println(nextLine);
+        while   (
+            (nextLine != null && (nextLine.trim().isEmpty() || nextLine.startsWith("//")))
+            || (counterhasMoreLines == 1)
+            ){
+            counterhasMoreLines++;
             if (nextLine.trim().isEmpty() && currLine != null){
                 break;
             }

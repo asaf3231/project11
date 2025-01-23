@@ -486,7 +486,6 @@ public class CompilationEngine {
             else if (tokenizer.currToken.equals(".")) {
                 if (symbolTable.methodLevelMap.containsKey(temp) || symbolTable.classLevelMap.containsKey(temp) ){
                     indexOfObject = symbolTable.indexOf(temp);
-                    System.out.println(indexOfObject);
                     temp = symbolTable.typeOf(temp);
                     isObjLet =true;
                 }

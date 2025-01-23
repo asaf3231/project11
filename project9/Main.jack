@@ -9,7 +9,6 @@ class Main{
         var Alien alien;
         var Sys sys;  
         var Array bul; 
-        var Projectile currBullet; 
         var int counter;
         var boolean flag;
         var int win_counter;
